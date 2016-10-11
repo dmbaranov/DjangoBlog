@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>DeValley IT Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/normalize.css" %}">
+    <link rel="stylesheet" href="{% static "css/font-awesome.css" %}">
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+  </head>
+  <body>
+    <div class="container-fluid container-fluid-header">
+      <div class="container">
+        <header class="page-header">
+          <div class="page-header__burger"></div>
+          <a href="/" class="page-header__logo">
+          </a>
+          <nav class="page-header__navigation">
+            <a href="{% url 'blog:post' %}">Create post</a>
+            <a href="{% url 'authorization:registration' %}">Registration</a>
+            <a href="{% url 'authorization:login' %}">Login</a>
+            <a href="{% url 'authorization:logout' %}">Logout</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+    <div class="container-fluid container-fluid-body">
+      <div class="container container-body">
+        {% block content %}
+        {% endblock %}
+        <aside class="page-widgets">
+          <div class="widget widget-search">
+            <form name="search" action="/">
+              <input class="search-field" type="search" name="search" placeholder="Search Now">
+              <i class="icon-search fa fa-search"></i>
+            </form>
+          </div>
+
+          <div class="widget widget-tags">
+            <div class="widget-tags__title">Page</div>
+            <div class="widget-tags__tags">
+                {% block pagination %}
+                {% endblock %}
+              <!--<a href="" class="tag">Gallery</a>-->
+              <!--<a href="" class="tag">Links</a>-->
+              <!--<a href="" class="tag">Quote</a>-->
+              <!--<a href="" class="tag">Sidebars</a>-->
+              <!--<a href="" class="tag">Status</a>-->
+              <!--<a href="" class="tag">Videos</a>-->
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+    <div class="container-fluid container-fluid-footer-first">
+      <div class="container">
+        <footer class="page-footer">
+          <div class="page-footer__section">
+            <div class="page-footer__section__title">Menu</div>
+            <ul class="page-footer__menu">
+              <li><a href="#">Item</a></li>
+              <li><a href="#">Item</a></li>
+              <li><a href="#">Item</a></li>
+              <li><a href="#">Item</a></li>
+            </ul>
+          </div>
+          <div class="page-footer__section">
+            <div class="page-footer__section__title">Subscribe</div>
+            <input class="page-footer__subscribe-field" type="text" name="subscribe" placeholder="Email Address">
+            <a href="#" class="page-footer__subscribe-button">Subscribe</a>
+          </div>
+        </footer>
+      </div>
+    </div>
+    <div class="container-fluid container-fluid-footer-second">
+      <div class="container">
+        <div class="page-footer__about">
+          Made by <span class="about__author">th1rt3nth</span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

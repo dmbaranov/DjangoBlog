@@ -1,0 +1,48 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block title %}
+    {{ post.title }}
+{% endblock %}
+
+{% block content %}
+    <section class="page-posts">
+      <article class="page-posts__post">
+        <header class="post__header">
+          <time class="post__header__date" datetime="2016-01-27">
+            <span class="datetime__day">{{ post.date|date:'j' }}</span>
+              <span class="datetime__monyear">{{ post.date|date:'F' }} {{ post.date|date:'Y' }}</span>
+          </time>
+          <div class="post__header__headline">
+            <div class="post__header__title">{{ post.title }}</div>
+            <div class="post__header__written-by">Written by {{ post.author }}</div>
+            <div class="post__header__avatar">
+              <img src="{% static "img/avatar.png" %}" alt="avatar">
+            </div>
+          </div>
+        </header>
+        <div class="post__text">{{ post.content }}</div>
+        <footer class="post__footer">
+          <div class="post__footer__category">Standart</div>
+          <div class="post__footer__category">Status</div>
+          <div class="post__footer__category">Comments</div>
+          <i class="post__icon fa fa-thumb-tack"></i>
+        </footer>
+        <div>
+            <form action="{% url 'blog:certain_post' pk=post.pk%}" method="post">
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div>
+            {% for comment in post.comment.all %}
+                <div>{{ comment.text }}</div>
+                <div>Written by{{ comment.author }}</div>
+            {% endfor %}
+        </div>
+      </article>
+    </section>
+
+{% endblock %}
