@@ -1,3 +1,4 @@
+import json
 from django.db import models
 
 
@@ -6,9 +7,14 @@ class Post(models.Model):
     content = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey('authorization.AppUser', related_name='post_author')
+    tags = models.CharField(max_length=300, default='')
 
     def __str__(self):
         return self.title
+
+    def get_tag_list(self):
+        tags = json.loads(self.tags)
+        return tags.split()
 
 
 class Comment(models.Model):

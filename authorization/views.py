@@ -65,3 +65,8 @@ class LogoutView(View):
 class AuthResultView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'authorization/auth_result.html')
+
+
+class ShowUser(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'authorization/profile.html')

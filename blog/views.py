@@ -1,3 +1,4 @@
+import json
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import View
 from django.urls import reverse_lazy, reverse
@@ -13,10 +14,13 @@ class IndexView(View):
     template_name = 'blog/index.html'
 
     def get(self, request, *args, **kwargs):
+        tags = request.GET.get('tags')
         post_list = Post.objects.all().order_by('-date')
-        paginator = Paginator(post_list, 2)
+        if tags is not None:
+            post_list = post_list.filter(tags__regex=tags)
+        paginator = Paginator(post_list, 10)
 
-        page = self.request.GET.get('page')
+        page = request.GET.get('page')
         try:
             posts = paginator.page(page)
         except PageNotAnInteger:
@@ -64,7 +68,6 @@ class PostView(LoginRequiredMixin, View):
     redirect_field_name = ''
 
     def get(self, request, *args, **kwargs):
-        print('here')
         form = NewPostForm()
 
         return render(request, 'blog/new_post.html', context={
@@ -78,6 +81,7 @@ class PostView(LoginRequiredMixin, View):
         if new_post_form.is_valid():
             post = new_post_form.save(commit=False)
             post.author = user
+            post.tags = json.dumps(request.POST.get('tags'))
             post.save()
 
             return HttpResponseRedirect(reverse('blog:index'))

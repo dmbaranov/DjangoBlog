@@ -3,7 +3,7 @@ from .models import Post, Comment
 
 
 class PostAdmin(admin.ModelAdmin):
-    fields = ['title', 'content']
+    fields = ['title', 'content', 'tags']
     search_fields = ['content']
 
 

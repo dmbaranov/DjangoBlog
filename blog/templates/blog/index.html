@@ -23,9 +23,11 @@
             <div class="post__text">{{ post.content }}</div>
             <a href="/post/{{ post.pk }}" class="post__read-more">Read More</a>
             <footer class="post__footer">
-              <div class="post__footer__category">Standart</div>
-              <div class="post__footer__category">Status</div>
-              <div class="post__footer__category">Comments</div>
+              {% for tag in post.get_tag_list %}
+                <div class="post__footer__category">
+                  {{ tag }}
+                </div>
+              {% endfor %}
               <i class="post__icon fa fa-thumb-tack"></i>
             </footer>
           </article>

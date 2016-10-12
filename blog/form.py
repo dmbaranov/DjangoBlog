@@ -3,8 +3,6 @@ from .models import Comment, Post
 
 
 class CommentForm(forms.ModelForm):
-    #text = forms.CharField(widget=forms.PasswordInput)
-
     class Meta:
         model = Comment
         exclude = ['post', 'author']

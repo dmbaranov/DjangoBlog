@@ -17,6 +17,8 @@
           <a href="/" class="page-header__logo">
           </a>
           <nav class="page-header__navigation">
+            {% block profile_link %}
+            {% endblock %}
             <a href="{% url 'blog:post' %}">Create post</a>
             <a href="{% url 'authorization:registration' %}">Registration</a>
             <a href="{% url 'authorization:login' %}">Login</a>
