@@ -7,15 +7,18 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 
 from .models import Post
-from .form import CommentForm, NewPostForm
+from .form import CommentForm, NewPostForm, UploadImage
+from authorization.models import AppUser
 
 
 class IndexView(View):
     template_name = 'blog/index.html'
 
     def get(self, request, *args, **kwargs):
+        user = request.user
         tags = request.GET.get('tags')
         post_list = Post.objects.all().order_by('-date')
+
         if tags is not None:
             post_list = post_list.filter(tags__regex=tags)
         paginator = Paginator(post_list, 10)
@@ -29,7 +32,8 @@ class IndexView(View):
             posts = paginator.page(paginator.num_pages)
 
         return render(request, 'blog/index.html', context={
-            'posts': posts
+            'posts': posts,
+            'user': user
         })
 
 
@@ -85,3 +89,23 @@ class PostView(LoginRequiredMixin, View):
             post.save()
 
             return HttpResponseRedirect(reverse('blog:index'))
+
+
+class ShowUser(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        form = UploadImage()
+
+        return render(request, 'blog/profile.html', context={
+            'user': user,
+            'form_img': form
+        })
+
+    def post(self, request, *args, **kwargs):
+        user = AppUser.objects.get(pk=request.user.pk)
+        form = UploadImage(files=request.FILES)
+        if form.is_valid():
+            user.avatar = request.FILES['file']
+            user.save()
+
+        return HttpResponseRedirect('/')

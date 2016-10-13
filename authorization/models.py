@@ -1,3 +1,4 @@
+import os
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, BaseUserManager
@@ -5,28 +6,9 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 # Create your models here.
 
 
-# class AppUserManager(UserManager):
-#     def create_user(self, username, email=None, password=None, age=None, **extra_fields):
-#         user = self.model(email='email', age=0, **extra_fields)
-#         user.set_password(password)
-#         user.save(using=self._db)
-#         return user
-#
-#     def create_superuser(self, username, email, password, **extra_fields):
-#         user = self.create_user(username=username, email=email, password=password)
-#         user.save(using=self._db)
-#         return user
-#
-#
-# class AppUser(AbstractUser):
-#     age = models.IntegerField(default=0)
-#     objects = AppUserManager()
-#
-#     USERNAME_FIELD = 'username'
-#     REQUIRED_FIELDS = []
-#
-#     class Meta:
-#         verbose_name = _('user')
+def get_image_path(instance, filename):
+    print(instance)
+    return os.path.join('img', str(instance.id), filename)
 
 
 class AppUserManager(BaseUserManager):
@@ -56,7 +38,7 @@ class AppUserManager(BaseUserManager):
 
 
 class AppUser(AbstractUser):
-    receive_newsletter = models.BooleanField('receive newsletter', default=False)
+    avatar = models.ImageField(upload_to=get_image_path, blank=True, null=True)
 
     objects = AppUserManager()
 
@@ -66,13 +48,3 @@ class AppUser(AbstractUser):
     class Meta:
         verbose_name = 'user'
         verbose_name_plural = 'users'
-
-    # def get_full_name(self):
-    #     full_name = '%s %s' % (self.first_name, self.last_name)
-    #     return full_name.strip()
-    #
-    # def get_short_name(self):
-    #     return self.first_name
-    #
-    # def email_user(self, subject, message, from_email=None):
-    #     send_mail(subject, message, from_email, [self.email])
