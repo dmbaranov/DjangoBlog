@@ -21,7 +21,7 @@ class IndexView(View):
 
         if tags is not None:
             post_list = post_list.filter(tags__regex=tags)
-        paginator = Paginator(post_list, 10)
+        paginator = Paginator(post_list, 4)
 
         page = request.GET.get('page')
         try:

@@ -1,6 +1,7 @@
 {% extends 'index.html' %}
 
 {#{% load static %}#}
+{% load blog_tags %}
 
 {% block profile_link %}
     {% if user.pk %}
@@ -22,7 +23,6 @@
                 <div class="post__header__title">{{ post.title }}</div>
                 <div class="post__header__written-by">Written by {{ post.author }}</div>
                 <div class="post__header__avatar">
-                    <div>{{ request.GET.urlencode }}</div>
                     <img src="{{ post.author.avatar.url }}" alt="avatar">
                 </div>
               </div>
@@ -32,7 +32,8 @@
             <footer class="post__footer">
               {% for tag in post.get_tag_list %}
                 <div class="post__footer__category">
-                  <a href="?tags={{ tag }}">{{ tag }}</a>
+{#                  <a href="?tags={{ tag }}">{{ tag }}</a>#}
+                    <a href="?{% query_transform request tags=tag %}">{{ tag }}</a>
                 </div>
               {% endfor %}
               <i class="post__icon fa fa-thumb-tack"></i>
@@ -45,10 +46,10 @@
 
 {% block pagination %}
     {% if posts.has_previous %}
-        <a class="post__read-more" href="?page={{ posts.previous_page_number }}">Previous</a>
+        <a class="post__read-more" href="?{% query_transform request page=posts.previous_page_number %}">Previous</a>
     {% endif %}
     <span class="post__read-more">{{ posts.number }}</span>
     {% if posts.has_next %}
-        <a class="post__read-more" href="?page={{ posts.next_page_number }}">Next</a>
+        <a class="post__read-more" href="?{% query_transform request page=posts.next_page_number %}">Next</a>
     {% endif %}
 {% endblock %}
