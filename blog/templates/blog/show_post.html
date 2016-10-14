@@ -1,6 +1,7 @@
 {% extends 'index.html' %}
 
 {% load static %}
+{% load hitcount_tags %}
 
 {% block title %}
     {{ post.title }}
@@ -19,6 +20,7 @@
             <div class="post__header__written-by">Written by {{ post.author }}</div>
             <div class="post__header__avatar">
               <img src="{% static "img/avatar.png" %}" alt="avatar">
+              <div>{% get_hit_count for post %}</div>
             </div>
           </div>
         </header>

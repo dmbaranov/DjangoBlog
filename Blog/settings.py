@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'authorization',
-    'blog'
+    'blog',
+
+    'hitcount'
 ]
 
 MIDDLEWARE = [

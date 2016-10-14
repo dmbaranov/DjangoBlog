@@ -23,19 +23,26 @@
                 <div class="post__header__title">{{ post.title }}</div>
                 <div class="post__header__written-by">Written by {{ post.author }}</div>
                 <div class="post__header__avatar">
-                    <img src="{{ post.author.avatar.url }}" alt="avatar">
+                    {% if post.author.avatar %}
+                        <img src="{{ post.author.avatar.url }}" alt="avatar">
+                    {% endif %}
+                    <div>Views: {{ post.views }}</div>
                 </div>
               </div>
             </header>
             <div class="post__text">{{ post.content }}</div>
             <a href="{% url 'blog:certain_post' pk=post.pk %}" class="post__read-more">Read More</a>
             <footer class="post__footer">
-              {% for tag in post.get_tag_list %}
-                <div class="post__footer__category">
-{#                  <a href="?tags={{ tag }}">{{ tag }}</a>#}
-                    <a href="?{% query_transform request tags=tag %}">{{ tag }}</a>
-                </div>
-              {% endfor %}
+                {% for tag in post.post_tags.all %}
+                    <div class="post__footer__category">
+                        <a href="?{% query_transform request tags=tag.title %}">{{ tag.title }}</a>
+                    </div>
+                {% endfor %}
+{#              {% for tag in post.get_tag_list %}#}
+{#                <div class="post__footer__category">#}
+{#                    <a href="?{% query_transform request tags=tag %}">{{ tag }}</a>#}
+{#                </div>#}
+{#              {% endfor %}#}
               <i class="post__icon fa fa-thumb-tack"></i>
             </footer>
           </article>

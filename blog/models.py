@@ -7,7 +7,6 @@ class Post(models.Model):
     content = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey('authorization.AppUser', related_name='post_author')
-    tags = models.CharField(max_length=300, default='')
 
     def __str__(self):
         return self.title
@@ -25,3 +24,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
+
+
+class Tag(models.Model):
+    title = models.CharField(max_length=64)
+    posts = models.ManyToManyField(Post, blank=True, related_name='post_tags')
+
+    def __str__(self):
+        return self.title

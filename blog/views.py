@@ -5,8 +5,10 @@ from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
+from hitcount.models import HitCount
+from hitcount.views import HitCountMixin
 
-from .models import Post
+from .models import Post, Tag
 from .form import CommentForm, NewPostForm, UploadImage
 from authorization.models import AppUser
 
@@ -18,9 +20,13 @@ class IndexView(View):
         user = request.user
         tags = request.GET.get('tags')
         post_list = Post.objects.all().order_by('-date')
+        # temp_post = Post.objects.get(pk=1)
+        # print(temp_post.tag_posts))
 
         if tags is not None:
-            post_list = post_list.filter(tags__regex=tags)
+            tag = Tag.objects.get(title=tags).pk
+            #post_list = post_list.filter(tags__regex=tags)
+            post_list = post_list.filter(post_tags=tag)
         paginator = Paginator(post_list, 4)
 
         page = request.GET.get('page')
@@ -43,6 +49,11 @@ class ShowPost(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         post = Post.objects.all().get(pk=kwargs['pk'])
+
+        hit_count = HitCount.objects.get_for_object(post)
+        HitCountMixin.hit_count(request, hit_count)
+
+
         comment_form = CommentForm()
 
         return render(request, 'blog/show_post.html', context={
@@ -57,9 +68,6 @@ class ShowPost(LoginRequiredMixin, View):
         comment_form = CommentForm(request.POST)
 
         if comment_form.is_valid():
-            print('***')
-            print(user)
-            print('***')
             comment = comment_form.save(commit=False)
             comment.post = post
             comment.author = user
@@ -85,8 +93,10 @@ class PostView(LoginRequiredMixin, View):
         if new_post_form.is_valid():
             post = new_post_form.save(commit=False)
             post.author = user
-            post.tags = json.dumps(request.POST.get('tags'))
+            tags = Tag.objects.filter(pk__in=request.POST.getlist('tags'))
+            #post.tags = json.dumps(request.POST.getlist('tags'))
             post.save()
+            post.post_tags.add(*tags)
 
             return HttpResponseRedirect(reverse('blog:index'))
 

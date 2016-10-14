@@ -1,5 +1,5 @@
 from django import forms
-from .models import Comment, Post
+from .models import Comment, Post, Tag
 
 
 class CommentForm(forms.ModelForm):
@@ -9,6 +9,9 @@ class CommentForm(forms.ModelForm):
 
 
 class NewPostForm(forms.ModelForm):
+    OPTIONS = tuple(Tag.objects.all().values_list('title'))
+    tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all())
+
     class Meta:
         model = Post
         exclude = ['author']
